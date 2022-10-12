@@ -108,6 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ForcedIncludeFiles>glew.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,9 +134,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ImageLoading.cpp" />
     <ClCompile Include="Init.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MeshLoading.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
@@ -143,14 +147,21 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="glew.h" />
     <ClInclude Include="glm\glm.hpp" />
+    <ClInclude Include="ImageLoading.h" />
     <ClInclude Include="Init.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="MeshLoading.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="fragmentShader.txt" />
     <Text Include="vertexShader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="pngegg.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

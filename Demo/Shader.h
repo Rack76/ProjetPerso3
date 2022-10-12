@@ -6,17 +6,18 @@
 #include <sstream>
 #include <string>
 #include "Camera.h"
+#include "Object.h"
 
 class Shader
 {
 public:
-	Shader(Camera* camera)
+	Shader(Camera* camera, RendererObject* object)
 	{
 		createShader();
 		useShaderProgram();
-		doShaderPlumbing(camera);
+		doShaderPlumbing(camera, object);
 	}
-	void doShaderPlumbing(Camera* camera);
+	void doShaderPlumbing(Camera* camera, RendererObject* object);
 
 private:
 	void useShaderProgram();

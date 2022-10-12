@@ -1,9 +1,9 @@
 #ifndef RENDER_H
 #define RENDER_h
 
+#include "Object.h"
 #include "glfw3.h"
 
-void setUpRenderingPipelineData();
-void render(GLFWwindow* window);
+void render(GLFWwindow* window, RendererObject* object);
 
 #endif

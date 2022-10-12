@@ -5,6 +5,7 @@
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "glfw3.h"
+#include <iostream>
 
 class Camera
 {
@@ -19,13 +20,14 @@ public:
 	}
 
 	void rotate(GLFWwindow* window, float dx, float dy);
-	void moveCamera();
 	void forward();
 	void backward();
 	void leftward();
 	void rightward();
 	void upward();
 	void downward();
+	void update();
+	void stopMoving();
 private:
 	void setUpCameraFrame();
 	glm::mat4 view;
@@ -34,6 +36,9 @@ private:
 	glm::vec3 orientation;
 	glm::vec3 up;
 	glm::vec3 right;
+	glm::vec3 Zvelocity;
+	glm::vec3 Xvelocity;
+	glm::vec3 Yvelocity;
 	float yaw;
 	float pitch;
 };

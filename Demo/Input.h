@@ -2,8 +2,9 @@
 #define INPUT_H
 
 #include "glfw3.h"
+#include "Camera.h"
 
-void keyboardCallback(GLFWwindow* window, int key, int scanCode, int action, int mods);
 void cursorPosCallback(GLFWwindow * window, double xpos, double ypos);
+void getAndProcessInputs(GLFWwindow* window, Camera* camera);
 
 #endif

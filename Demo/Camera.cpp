@@ -1,5 +1,5 @@
+#include "glew.h"
 #include "Camera.h"
-#include <iostream>
 
 Camera::Camera()
 {
@@ -8,6 +8,11 @@ Camera::Camera()
 	up = glm::vec3(0.0f, 1.0f, 0.0f);
 	yaw = 0;
 	pitch = 0;
+	Zvelocity = glm::vec3(0.0,0.0, 0.0);
+	Xvelocity = glm::vec3(0.0, 0.0, 0.0);
+	Yvelocity = glm::vec3(0.0, 0.0, 0.0);
+	orientation = glm::vec3(0.0, 0.0, 0.0);
+
 	setUpCameraFrame();
 }
 
@@ -23,51 +28,52 @@ void Camera::rotate(GLFWwindow* window, float dx, float dy)
 			pitch = 88.0 * M_PI / 180.0;
 		if (pitch < -88.0 * M_PI / 180.0)
 			pitch = -88.0 * M_PI / 180.0;
-		setUpCameraFrame();
 
 		glfwSetCursorPos(window, width/2.0, height/2.0);
 	}
 }
 
-void Camera::moveCamera()
-{
-
-}
 
 void Camera::forward()
 {
-	position += orientation * 0.1f;
-	setUpCameraFrame();
+	Zvelocity = orientation * 0.001f;
 }
 
 void Camera::backward()
 {
-	position = position - orientation * 0.1f;
-	setUpCameraFrame();
+	Zvelocity = - orientation * 0.001f;
 }
 
 void Camera::leftward()
 {
-	position -= right * 0.1f;
-	setUpCameraFrame();
+	Xvelocity = right * -0.001f;
 }
 
 void Camera::rightward()
 {
-	position += right * 0.1f;
-	setUpCameraFrame();
+	Xvelocity = right * 0.001f;
 }
 
 void Camera::upward()
 {
-	position -= up * 0.1f;
-	setUpCameraFrame();
+	Yvelocity = up * 0.001f;
 }
 
 void Camera::downward()
 {
-	position += up * 0.1f;
+	Yvelocity = up * -0.001f;
+}
+
+void Camera::update()
+{
 	setUpCameraFrame();
+}
+
+void Camera::stopMoving()
+{
+	Zvelocity = glm::vec3(0.0, 0.0, 0.0);
+	Xvelocity = glm::vec3(0.0, 0.0, 0.0);
+	Yvelocity = glm::vec3(0.0, 0.0, 0.0);
 }
 
 void Camera::setUpCameraFrame()
@@ -76,12 +82,16 @@ void Camera::setUpCameraFrame()
 		orientation = glm::vec3(sin(yaw), 0, cos(yaw));
 		glm::vec3 cameraX = glm::normalize(glm::cross(cameraZ, up));
 		right = cameraX;
+		position += Zvelocity + Xvelocity + Yvelocity;
 		glm::vec3 cameraY = glm::normalize(glm::cross(cameraX, cameraZ));
-		glm::mat4 translationMat = glm::translate(glm::mat4(1.0), -position);
 		glm::mat4 translationMat1 = glm::mat4(glm::vec4(1.0, 0.0, 0.0, 0.0),
 			                                  glm::vec4(0.0, 1.0, 0.0, 0.0),
 											  glm::vec4(0.0, 0.0, 1.0, 0.0),
 			                                  glm::vec4(-position.x, -position.y, -position.z, 1.0));
+		//glm::mat4 translationMat1 = glm::mat4(1.0, 0.0, 0.0, 0.0,
+											 // 0.0, 1.0, 0.0, 0.0,
+									  	     // 0.0, 0.0, 1.0, 0.0,
+											  //-position.x, -position.y, -position.z, 1.0);
 		view = glm::mat4(glm::vec4(cameraX, 0.0f), glm::vec4(cameraY, 0.0f), glm::vec4(-cameraZ, 0.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	
 		view = glm::transpose(translationMat1) * view;
 }

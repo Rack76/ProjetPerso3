@@ -1,1 +1,1 @@
-ERROR:0:10:'*':wrongoperandtypesnooperation'*'existsthattakesaleft-handoperandoftype'attribute3-componentvectorofhighpfloat'andarightoperandoftype'uniform4X4matrixofhighpfloat'(orthereisnoacceptableconversion)ERROR:0:10:'*':wrongoperandtypesnooperation'*'existsthattakesaleft-handoperandoftype'attribute3-componentvectorofhighpfloat'andarightoperandoftype'4-componentvectorofhighpfloat'(orthereisnoacceptableconversion)ERROR:0:10:'=':cannotconvertfrom'attribute3-componentvectorofhighpfloat'to'4-componentvectorofhighpfloat'float'
+ERROR:0:11:'view':syntaxerrorsyntaxerrorerror
