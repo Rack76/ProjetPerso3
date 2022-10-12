@@ -103,8 +103,6 @@ void Shader::doShaderPlumbing(Camera* camera, RendererObject* object)
 	int worldID = glGetUniformLocation(program, "world");
 	glUniformMatrix4fv(worldID, 1, GL_FALSE, object->getWorldArray());
 
-	glUniform1i(glGetUniformLocation(program, "tex") , 0);
-
 	int viewID = glGetUniformLocation(program, "view");
 	glUniformMatrix4fv(viewID, 1, GL_FALSE, camera->getViewArray());
 

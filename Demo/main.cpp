@@ -22,16 +22,17 @@ int main(int argc, char** argv)
 	}
 
 	Camera camera;
-	RendererObject object("cube.obj", "brick1.jpg");
-	Shader shader1(&camera, &object);
+	std::vector<RendererObject*> objects;
+	objects.push_back(new RendererObject("cube.obj", "brick.jpg", -2.0, 0.0, 1.0));
+	Renderer renderer(objects);
+	Shader shader(&camera, objects[0]);
 	initKeyboardAndMouseInput(window, &camera);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		shader1.doShaderPlumbing(&camera, &object);
 		getAndProcessInputs(window, &camera);
 		camera.update();
-		render(window, &object);
+		renderer.render(window, &shader, &camera);
 		glfwPollEvents();
 	}
 }

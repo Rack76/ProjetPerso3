@@ -8,7 +8,7 @@
 #include <vector>
 #include "glew.h"
 
-GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat* textureCoordArray, int& textCoordSize);
+GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat** textureCoordArray, int& textCoordSize);
 GLfloat* createArray(const std::vector<GLfloat>& v);
 
 #endif 

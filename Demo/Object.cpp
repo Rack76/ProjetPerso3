@@ -3,11 +3,12 @@
 #include "stb_image.h"
 #define STBI_MAX_DIMENSIONS 16 000 000
 
-RendererObject::RendererObject(std::string meshFilename, std::string imageFilename)
+RendererObject::RendererObject(std::string meshFilename, std::string imageFilename, float x, float y, float z)
 {
     orientation = glm::mat4(1.0);
-    position = glm::translate(glm::vec3(0.0, 0.0, 0.0));
+    position = glm::vec4(x, y, z, 1.0);
     world = glm::mat4(1.0);
+    textCoord = new GLfloat*;
     vertexPositions = loadOBJMesh(meshFilename, vertexPositionsSize, textCoord, textCoordSize);
     imageData = stbi_load(imageFilename.c_str(), &imageWidth, &imageHeight, &bpp, 4);
     setUpRenderingPipelineData();
@@ -21,7 +22,7 @@ void RendererObject::setUpRenderingPipelineData()
 
     glGenBuffers(1, &textureCoordinatesName);
     glBindBuffer(GL_ARRAY_BUFFER, textureCoordinatesName);
-    glBufferData(GL_ARRAY_BUFFER, textCoordSize, textCoord, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, textCoordSize, *textCoord, GL_STATIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, (void*) 0);
     glEnableVertexAttribArray(1);
 
@@ -38,20 +39,32 @@ void RendererObject::setUpRenderingPipelineData()
     glActiveTexture(GL_TEXTURE0);
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, 4 * vertexPositionsSize, vertexPositions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexPositionsSize, vertexPositions, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, (void*)0);
     glEnableVertexAttribArray(0);
 }
 
 void RendererObject::bind()
 {
-    glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(vao);
 }
 
 void RendererObject::update()
 {
-    world = position * orientation;
+    world = orientation * glm::mat4(1.0, 0.0, 0.0, position.x,
+                                    0.0, 1.0, 0.0, position.y,
+                                    0.0, 0.0, 1.0, position.z,
+                                    0.0, 0.0, 0.0, 1.0);
+}
+
+void RendererObject::setOrientation(float angle, float x, float y , float z)
+{
+    orientation = glm::rotate(angle, glm::vec3(x, y, z));
+}
+
+void RendererObject::setPosition(float x, float y, float z)
+{
+       position = glm::vec4(x, y, z, 1.0);
 }
 
 RendererObject::~RendererObject()

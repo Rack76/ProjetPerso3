@@ -4,6 +4,15 @@
 #include "Object.h"
 #include "glfw3.h"
 
-void render(GLFWwindow* window, RendererObject* object);
+class Renderer 
+{
+public:
+	Renderer(std::vector<RendererObject*> objects) {
+		m_objects = objects;
+	}
+	void render(GLFWwindow* window, Shader* shader, Camera* camera);
+private:
+	std::vector<RendererObject*> m_objects;
+};
 
 #endif

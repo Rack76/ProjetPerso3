@@ -13,8 +13,10 @@ class RendererObject
 {
 public:
 
-	RendererObject(std::string meshFilename, std::string imageFilename);
+	RendererObject(std::string meshFilename, std::string imageFilename, float x, float y, float z);
 	~RendererObject();
+	void setOrientation(float angle, float x, float y, float z);
+	void setPosition(float x, float y, float z);
 	void update();
 	void bind();
 	float* getWorldArray() {
@@ -34,8 +36,8 @@ private:
 	int bpp;
 	unsigned char* imageData;
 	GLfloat* vertexPositions;
-	GLfloat* textCoord;
-	glm::mat4 position;
+	GLfloat** textCoord;
+	glm::vec4 position;
 	glm::mat4 world;
 	glm::mat4 orientation;
 };

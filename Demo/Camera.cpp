@@ -4,7 +4,7 @@
 Camera::Camera()
 {
 	projection = glm::perspective(20.0 * M_PI / 180.0, 1.2, 1.0, 100.0);
-	position = glm::vec3(0.0, 0.0, -1.0);
+	position = glm::vec3(0.0, 0.0, -2.0);
 	up = glm::vec3(0.0f, 1.0f, 0.0f);
 	yaw = 0;
 	pitch = 0;
@@ -36,32 +36,32 @@ void Camera::rotate(GLFWwindow* window, float dx, float dy)
 
 void Camera::forward()
 {
-	Zvelocity = orientation * 0.001f;
+	Zvelocity = orientation * 0.3f;
 }
 
 void Camera::backward()
 {
-	Zvelocity = - orientation * 0.001f;
+	Zvelocity = - orientation * 0.3f;
 }
 
 void Camera::leftward()
 {
-	Xvelocity = right * -0.001f;
+	Xvelocity = right * -0.3f;
 }
 
 void Camera::rightward()
 {
-	Xvelocity = right * 0.001f;
+	Xvelocity = right * 0.3f;
 }
 
 void Camera::upward()
 {
-	Yvelocity = up * 0.001f;
+	Yvelocity = up * 0.3f;
 }
 
 void Camera::downward()
 {
-	Yvelocity = up * -0.001f;
+	Yvelocity = up * -0.3f;
 }
 
 void Camera::update()

@@ -1,17 +1,20 @@
 #include "glew.h"
+#include "Shader.h"
 #include "glfw3.h"
 #include "Object.h"
+#include "Render.h"
 #include <iostream>
 
-void render(GLFWwindow* window, RendererObject* object)
+void Renderer::render(GLFWwindow* window, Shader* shader, Camera* camera)
 {
-    object->bind();
-    glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, (void*)0);
-    glEnableVertexAttribArray(0);
-    const static GLfloat red[] = {1.0f, 0.0f, 0.0f, 1.0f};
-    glClearBufferfv(GL_COLOR, 0, red);
-    glDrawArrays(GL_TRIANGLES, 0, object->vertexPositionsSize);
-    glfwSwapBuffers(window);
+    for (int i = 0; i < m_objects.size(); i++)
+    {
+        m_objects[i]->setOrientation(0.6, 0.0, 1.0, 0.0);
+        m_objects[i]->update();
+        shader->doShaderPlumbing(camera, m_objects[i]);
+        m_objects[i]->bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDrawArrays(GL_TRIANGLES, 0, m_objects[i]->vertexPositionsSize);
+        glfwSwapBuffers(window);
+    }
 }

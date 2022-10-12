@@ -1,6 +1,6 @@
 #include "MeshLoading.h"
 
-GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat* textureCoordArray, int& textCoordSize)
+GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat** textureCoordArray, int& textCoordSize)
 {
 	std::vector<GLfloat> unsortedVertexArray;
 	std::vector<GLfloat> unsortedTextureCoordArray;
@@ -20,9 +20,9 @@ GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat* textureCoordArray
 	while (std::getline(file, line), line[1] != 't')
 	{
 		std::istringstream ss(line);
-		char v;
+		char t;
 		float item;
-		ss >> v;
+		ss >> t;
 		ss >> item;
 		unsortedVertexArray.push_back(item);
 		ss >> item;
@@ -92,9 +92,9 @@ GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat* textureCoordArray
 		std::cout << var << '\n';
 	}
 
-	textureCoordArray = createArray(sortedTextureCoordArray);
+	*textureCoordArray = createArray(sortedTextureCoordArray);
 
-	size = sortedVertexArray.size();
+	size = 4 * sortedVertexArray.size();
 	textCoordSize =  4 * sortedTextureCoordArray.size();
 
 	return createArray(sortedVertexArray);
