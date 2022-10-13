@@ -40,6 +40,10 @@ private:
 	glm::vec4 position;
 	glm::mat4 world;
 	glm::mat4 orientation;
+	std::vector<std::vector<glm::vec3>> triangles;
+	std::vector<std::vector<glm::vec3>> edges;
+	std::vector<glm::vec3>
+
 };
 
 #endif

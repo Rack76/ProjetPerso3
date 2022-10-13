@@ -78,6 +78,19 @@ GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat** textureCoordArra
 		sortedVertexArray.push_back(unsortedVertexArray[(order[i] - 1) * 3 + 2]);
 	}
 
+	*edgeList = new Edge[arraySize];
+
+	for (i; i < arraySize; i++)
+	{
+		*edgeList[i].v0.x = unsortedVertexArray[(order[i] - 1) * 3];
+		*edgeList[i].v0.y = unsortedVertexArray[(order[i] - 1) * 3 + 1];
+		*edgeList[i].v0.z = unsortedVertexArray[(order[i] - 1) * 3 + 2];
+
+		*edgeList[i].v1.x = unsortedVertexArray[(order[((i + 1) % 3) + 2 * (i / 3)] - 1) * 3];
+		*edgeList[i].v1.y = unsortedVertexArray[(order[((i + 1) % 3) + 2 * (i / 3)] - 1) * 3 + 1];
+		*edgeList[i].v1.z = unsortedVertexArray[(order[((i + 1) % 3) + 2 * (i / 3)] - 1) * 3 + 2];
+	}
+
 	arraySize = textureOrder.size();
 	i = 0;
 

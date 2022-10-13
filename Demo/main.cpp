@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 
 	Camera camera;
 	std::vector<RendererObject*> objects;
-	objects.push_back(new RendererObject("cube.obj", "brick.jpg", -2.0, 0.0, 1.0));
+	objects.push_back(new RendererObject("cube.obj", "brick1.jpg", -2.0, 0.0, 1.0));
 	Renderer renderer(objects);
 	Shader shader(&camera, objects[0]);
 	initKeyboardAndMouseInput(window, &camera);

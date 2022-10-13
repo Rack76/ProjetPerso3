@@ -152,6 +152,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="MeshLoading.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
