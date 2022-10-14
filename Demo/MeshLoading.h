@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <iterator>
 #include "glew.h"
 
 GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat** textureCoordArray, int& textCoordSize);

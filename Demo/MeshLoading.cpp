@@ -6,8 +6,8 @@ GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat** textureCoordArra
 	std::vector<GLfloat> unsortedTextureCoordArray;
 	std::vector<GLfloat> sortedVertexArray;
 	std::vector<GLfloat> sortedTextureCoordArray;
-	std::vector<GLfloat> order;
-	std::vector<GLfloat> textureOrder;
+	std::vector<int> order;
+	std::vector<int> textureOrder;
 
 	std::ifstream file(filename);
 	std::string line;
@@ -78,17 +78,30 @@ GLfloat* loadOBJMesh(std::string filename, int& size, GLfloat** textureCoordArra
 		sortedVertexArray.push_back(unsortedVertexArray[(order[i] - 1) * 3 + 2]);
 	}
 
-	*edgeList = new Edge[arraySize];
+	std::vector<EdgeInfo> edgeInfoList;
+	EdgeInfo edge;
+	std::vector<int> edgeIndex;
+	auto it = edgeIndex.begin();
 
 	for (i; i < arraySize; i++)
 	{
-		*edgeList[i].v0.x = unsortedVertexArray[(order[i] - 1) * 3];
-		*edgeList[i].v0.y = unsortedVertexArray[(order[i] - 1) * 3 + 1];
-		*edgeList[i].v0.z = unsortedVertexArray[(order[i] - 1) * 3 + 2];
+		edgeIndex.push_back(order[i]);
+		edge.v0.x = unsortedVertexArray[(order[i] - 1) * 3];
+		edge.v0.y = unsortedVertexArray[(order[i] - 1) * 3 + 1];
+		edge.v0.z = unsortedVertexArray[(order[i] - 1) * 3 + 2];
 
-		*edgeList[i].v1.x = unsortedVertexArray[(order[((i + 1) % 3) + 2 * (i / 3)] - 1) * 3];
-		*edgeList[i].v1.y = unsortedVertexArray[(order[((i + 1) % 3) + 2 * (i / 3)] - 1) * 3 + 1];
-		*edgeList[i].v1.z = unsortedVertexArray[(order[((i + 1) % 3) + 2 * (i / 3)] - 1) * 3 + 2];
+		edge.v1.x = unsortedVertexArray[(order[((i + 1) % 3) + 3 * (i / 3)] - 1) * 3];
+		edge.v1.y = unsortedVertexArray[(order[((i + 1) % 3) + 3 * (i / 3)] - 1) * 3 + 1];
+		edge.v1.z = unsortedVertexArray[(order[((i + 1) % 3) + 3 * (i / 3)] - 1) * 3 + 2];
+
+		if ((it = std::lower_bound(edgeIndex.begin(), edgeIndex.end(), order[(i + 1) % arraySize] )) == edgeIndex.end())
+		{
+
+		}
+		else
+		{
+			
+		}
 	}
 
 	arraySize = textureOrder.size();
