@@ -6,6 +6,15 @@
 void initKeyboardAndMouseInput(GLFWwindow* window, Camera* camera)
 {
 	int width, height;
+	glfwMakeContextCurrent(window);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	GLenum err = glewInit();
+	if (GLEW_OK != err)
+	{
+		/* Problem: glewInit failed, something is seriously wrong. */
+		std::cout << "f";
+	}
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);

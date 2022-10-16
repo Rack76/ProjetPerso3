@@ -9,7 +9,8 @@ RendererObject::RendererObject(std::string meshFilename, std::string imageFilena
     position = glm::vec4(x, y, z, 1.0);
     world = glm::mat4(1.0);
     textCoord = new GLfloat*;
-    vertexPositions = loadOBJMesh(meshFilename, vertexPositionsSize, textCoord, textCoordSize);
+    vertexPositions = loadOBJMesh(meshFilename, vertexPositionsSize, textCoord, textCoordSize, vertexPositionsVector, unsortedVertexArray, order);
+    meshInfo(vertexPositionsSize / (3 * 3 * 4), faceInfoList, edgeInfoList, normals, vertexPositionsVector, unsortedVertexArray, order);
     imageData = stbi_load(imageFilename.c_str(), &imageWidth, &imageHeight, &bpp, 4);
     setUpRenderingPipelineData();
 }
