@@ -15,10 +15,9 @@ class RendererObject
 {
 public:
 
-	RendererObject(std::string meshFilename, std::string imageFilename, float x, float y, float z);
+	RendererObject(std::string meshFilename, std::string imageFilename, float x, float y, float z,
+					float mass, float cof, float cor);
 	~RendererObject();
-	void setOrientation(float angle, float x, float y, float z);
-	void setPosition(float x, float y, float z);
 	void update();
 	void bind();
 	float* getWorldArray() {
@@ -27,6 +26,16 @@ public:
 	int vertexPositionsSize;
 	GLuint vbo;
 	GLuint textureCoordinatesName;
+	int physicsObjectHandle;
+	std::vector<EdgeInfo> edgeInfoList;
+	std::vector<FaceInfo> faceInfoList;
+	std::vector<glm::vec3> normals;
+	glm::vec3 position;
+	glm::mat4 orientation;
+	float m_mass;
+	float m_cor;
+	float m_cof;
+	int physicalStatus; // 0 for a rigid body, 1 for a static object, 2 for an articulated object, 3 for a weapon
 private:
 	void setUpRenderingPipelineData();
 	GLuint vao;
@@ -39,12 +48,7 @@ private:
 	unsigned char* imageData;
 	GLfloat* vertexPositions;
 	GLfloat** textCoord;
-	glm::vec4 position;
 	glm::mat4 world;
-	glm::mat4 orientation;
-	std::vector<EdgeInfo> edgeInfoList;
-	std::vector<FaceInfo> faceInfoList;
-	std::vector<glm::vec3> normals;
 	std::vector<GLfloat> vertexPositionsVector;
 	std::vector<GLfloat> unsortedVertexArray;
 	std::vector<int> order;

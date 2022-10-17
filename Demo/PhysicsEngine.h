@@ -19,10 +19,14 @@ public:
 			handles.push(i);
 		}
 	}
+	~PhysicsEngine()
+	{
+		objects.clear();
+	}
 	 int registerObject(std::vector<FaceInfo> faceInfoList, std::vector<EdgeInfo> edgeInfoList, std::vector<glm::vec3> normals
 		, float mass, float cof, float cor
 		, glm::vec3 position
-		, glm::mat4 orientation, BVH bvh);
+		, glm::mat4 orientation);
 	 void mapObject(int handle, glm::vec3& position, glm::mat4& orientation);
 	void deleteObject(int handle);
 private:

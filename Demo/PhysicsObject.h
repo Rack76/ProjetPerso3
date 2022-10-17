@@ -18,7 +18,7 @@ public:
 	PhysicsObject(std::vector<FaceInfo> faceInfoList, std::vector<EdgeInfo> edgeInfoList, std::vector<glm::vec3> normals
 		, float mass, float cof, float cor
 		, glm::vec3 position
-		, glm::mat4 orientation,  BVH bvh)
+		, glm::mat4 orientation)
 	{
 		m_faceInfoList = faceInfoList;
 		m_edgeInfoList = edgeInfoList;
@@ -28,13 +28,13 @@ public:
 		m_cor = cor;
 		m_position = glm::vec4(position, 1.0);
 		m_orientation = orientation;
-		m_bvh = bvh;
 	}
 
 	glm::vec4 m_position;
-	glm::mat4 m_orientation;
 	glm::vec4 centerOfMass;
+	glm::mat4 m_orientation;
 	glm::mat4 localInertiaTensor;
+	glm::mat4 localFrame;
 private:
 	std::vector<FaceInfo> m_faceInfoList;
 	std::vector<EdgeInfo> m_edgeInfoList;
@@ -42,7 +42,7 @@ private:
 	float m_mass;
 	float m_cof;
 	float m_cor;
-	BVH m_bvh;
+	BVH bvh;
 
 };
 
