@@ -15,30 +15,33 @@ public:
 	{
 
 	}
-	PhysicsObject(std::vector<FaceInfo> faceInfoList, std::vector<EdgeInfo> edgeInfoList
+	PhysicsObject(std::vector<FaceInfo> faceInfoList, std::vector<EdgeInfo> edgeInfoList, std::vector<glm::vec3> normals
 		, float mass, float cof, float cor
 		, glm::vec3 position
 		, glm::mat4 orientation,  BVH bvh)
 	{
 		m_faceInfoList = faceInfoList;
 		m_edgeInfoList = edgeInfoList;
+		m_normals = normals;
 		m_mass = mass;
 		m_cof = cof;
 		m_cor = cor;
-		m_position = position;
+		m_position = glm::vec4(position, 1.0);
 		m_orientation = orientation;
 		m_bvh = bvh;
 	}
 
-	glm::vec3 m_position;
+	glm::vec4 m_position;
 	glm::mat4 m_orientation;
+	glm::vec4 centerOfMass;
+	glm::mat4 localInertiaTensor;
 private:
 	std::vector<FaceInfo> m_faceInfoList;
 	std::vector<EdgeInfo> m_edgeInfoList;
+	std::vector<glm::vec3> m_normals;
 	float m_mass;
 	float m_cof;
 	float m_cor;
-	glm::mat3 InertiaTensor;
 	BVH m_bvh;
 
 };

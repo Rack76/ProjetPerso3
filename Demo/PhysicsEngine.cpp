@@ -1,13 +1,13 @@
 #include "PhysicsEngine.h"
 
-int PhysicsEngine::registerObject(std::vector<FaceInfo> faceInfoList, std::vector<EdgeInfo> edgeInfoList
+int PhysicsEngine::registerObject(std::vector<FaceInfo> faceInfoList, std::vector<EdgeInfo> edgeInfoList, std::vector<glm::vec3> normals
 	                              ,float mass, float cof, float cor
 								  ,glm::vec3 position
 								  ,glm::mat4 orientation, BVH bvh)
 {
 	int handle = handles.front();
 	handles.pop();
-	objects.emplace(handle, PhysicsObject(faceInfoList, edgeInfoList, mass,
+	objects.emplace(handle, PhysicsObject(faceInfoList, edgeInfoList, normals, mass,
 		cof, cor, position, orientation, bvh)).first;
 	return handle;
 }
@@ -24,7 +24,9 @@ void PhysicsEngine::deleteObject(int handle)
 	handles.push(handle);
 }
 
-void PhysicsEngine::computeObjectExtendedRepresentation()
+void PhysicsEngine::computeObjectExtendedRepresentation(int handle)
 {
-
+	objects[handle].centerOfMass = ;
+	objects[handle].localInertiaTensor = ;
+	objects[handle].localFrame =  glm::translate(objects[handle].localInertiaTensor, glm::vec3(objects[handle].centerOfMass));
 }
