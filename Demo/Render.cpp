@@ -9,7 +9,7 @@ void Renderer::registerObjectsWithPhysicsSubsystem()
 {
     for (int i = 0; i < m_objects.size(); i++)
     {
-        m_objects[i]->physicsObjectHandle = m_physicsp->registerObject(m_objects[i]->faceInfoList, m_objects[i]->edgeInfoList, m_objects[i]->normals,
+        m_objects[i]->physicsObjectHandle = m_physicsp->registerObject(m_objects[i]->faceInfoList, m_objects[i]->edgeInfoList, m_objects[i]->normals, m_objects[i]->vertices,
                                                                m_objects[i]->m_mass, m_objects[i]->m_cof, m_objects[i]->m_cor, m_objects[i]->position, m_objects[i]->orientation);
     }
 }

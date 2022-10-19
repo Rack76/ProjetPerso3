@@ -133,16 +133,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AdaptiveTimeStepSolver.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ImageLoading.cpp" />
     <ClCompile Include="Init.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Integrator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshLoading.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
+    <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdaptiveTimeStepSolver.h" />
@@ -155,13 +159,16 @@
     <ClInclude Include="ImageLoading.h" />
     <ClInclude Include="Init.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Integrator.h" />
     <ClInclude Include="MeshLoading.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="fragmentShader.txt" />

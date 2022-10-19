@@ -6,5 +6,6 @@
 
 void cursorPosCallback(GLFWwindow * window, double xpos, double ypos);
 void getAndProcessInputs(GLFWwindow* window, Camera* camera);
+void keyCallback(GLFWwindow* window, int a, int b, int c, int d);
 
 #endif

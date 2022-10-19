@@ -70,6 +70,13 @@ void getAndProcessInputs(GLFWwindow* window, Camera* camera)
 			camera->stopMoving();
 	}
 	leftShiftTemp = leftShiftState;
+	camera->setUpCameraFrame();
+}
+
+void keyCallback(GLFWwindow* window, int a , int b , int c , int d)
+{
+	Camera* camera = static_cast<Camera*>(glfwGetWindowUserPointer(window));
+	getAndProcessInputs(window, camera);
 }
 
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)

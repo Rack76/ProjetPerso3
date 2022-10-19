@@ -14,6 +14,10 @@ RendererObject::RendererObject(std::string meshFilename, std::string imageFilena
     m_cof = cof;
     m_cor = cor;
     vertexPositions = loadOBJMesh(meshFilename, vertexPositionsSize, textCoord, textCoordSize, vertexPositionsVector, unsortedVertexArray, order);
+    for (int i = 0; i < unsortedVertexArray.size(); i+=3)
+    {
+        vertices.push_back(glm::vec3(unsortedVertexArray[i], unsortedVertexArray[i+1], unsortedVertexArray[i+2]));
+    }
     meshInfo(vertexPositionsSize / (3 * 3 * 4), faceInfoList, edgeInfoList, normals, vertexPositionsVector, unsortedVertexArray, order);
     imageData = stbi_load(imageFilename.c_str(), &imageWidth, &imageHeight, &bpp, 4);
     setUpRenderingPipelineData();

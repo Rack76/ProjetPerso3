@@ -24,7 +24,6 @@ int main(int argc, char** argv)
 	while (!glfwWindowShouldClose(window))
 	{
 		getAndProcessInputs(window, &camera);
-		camera.update();
 		renderer.render(window, &shader, &camera);
 		glfwPollEvents();
 	}

@@ -36,6 +36,7 @@ public:
 	float m_cor;
 	float m_cof;
 	int physicalStatus; // 0 for a rigid body, 1 for a static object, 2 for an articulated object, 3 for a weapon
+	std::vector<glm::vec3> vertices;
 private:
 	void setUpRenderingPipelineData();
 	GLuint vao;

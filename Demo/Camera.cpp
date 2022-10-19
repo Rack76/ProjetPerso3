@@ -22,6 +22,7 @@ void Camera::rotate(GLFWwindow* window, float dx, float dy)
 	{
 		int width, height;
 		glfwGetWindowSize(window, &width, &height);
+		glfwSetCursorPos(window, width / 2.0, height / 2.0);
 		yaw -= (dx - (width / 2.0)) / 100;
 		pitch -= (dy - (height / 2.0)) / 100;
 		if (pitch > 88.0 * M_PI / 180.0)
@@ -29,7 +30,7 @@ void Camera::rotate(GLFWwindow* window, float dx, float dy)
 		if (pitch < -88.0 * M_PI / 180.0)
 			pitch = -88.0 * M_PI / 180.0;
 
-		glfwSetCursorPos(window, width/2.0, height/2.0);
+		setUpCameraFrame();
 	}
 }
 
