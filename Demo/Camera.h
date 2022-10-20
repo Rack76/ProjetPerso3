@@ -20,12 +20,12 @@ public:
 	}
 
 	void rotate(GLFWwindow* window, float dx, float dy);
-	void forward();
-	void backward();
-	void leftward();
-	void rightward();
-	void upward();
-	void downward();
+	void forward(float dt);
+	void backward(float dt);
+	void leftward(float dt);
+	void rightward(float dt);
+	void upward(float dt);
+	void downward(float dt);
 	void update();
 	void stopMoving();
 	void setUpCameraFrame();

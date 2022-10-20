@@ -6,9 +6,12 @@
 #include "PhysicsObject.h"
 #include "BVH.h"
 #include "Timer.h"
+#include "Plane.h"
+#include "Face.h"
 #include <map>
 #include <queue>
 #include <vector>
+#include <iostream>
 
 class PhysicsEngine
 {
@@ -33,7 +36,13 @@ public:
 	void deleteObject(int handle);
 	void run();
 private:
+	void computeBVs(int handle, BVH** bvh, glm::vec3 medianPoint, float radius, std::vector<Face> faces);
+	void computeBVs2(int handle, BVH** bvh, glm::vec3 medianPoint, float radius, std::vector<glm::vec3> faces);
+	void respondToCollisions();
+	void moveBVHs(int level);
 	void computeBVH(int handle);
+	void computeContinuousBVHs(int level);
+	void detectCollisions();
 	void computeObjectExtendedRepresentation(int handle);
 	void computeNetForceTorquePair();
 	void applyGravity();

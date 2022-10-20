@@ -7,9 +7,12 @@
 class Sphere
 {
 public:
+	Sphere() {
+
+	}
 	Sphere(glm::vec3 center, float radius){
 		m_center = center;
-		radius = m_radius;
+		m_radius = radius;
 	}
 	glm::vec3 m_center;
 	float m_radius;

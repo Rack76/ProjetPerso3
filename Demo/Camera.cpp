@@ -35,34 +35,34 @@ void Camera::rotate(GLFWwindow* window, float dx, float dy)
 }
 
 
-void Camera::forward()
+void Camera::forward(float dt)
 {
-	Zvelocity = orientation * 0.2f;
+	Zvelocity = orientation * dt *6.0f;
 }
 
-void Camera::backward()
+void Camera::backward(float dt)
 {
-	Zvelocity = - orientation * 0.2f;
+	Zvelocity = - orientation * dt * 6.0f;
 }
 
-void Camera::leftward()
+void Camera::leftward(float dt)
 {
-	Xvelocity = right * -0.2f;
+	Xvelocity = right * dt * -6.0f;
 }
 
-void Camera::rightward()
+void Camera::rightward(float dt)
 {
-	Xvelocity = right * 0.2f;
+	Xvelocity = right * dt * 6.0f;
 }
 
-void Camera::upward()
+void Camera::upward(float dt)
 {
-	Yvelocity = up * 0.2f;
+	Yvelocity = up * dt * 6.0f;
 }
 
-void Camera::downward()
+void Camera::downward(float dt)
 {
-	Yvelocity = up * -0.2f;
+	Yvelocity = up * dt * -6.0f;
 }
 
 void Camera::update()

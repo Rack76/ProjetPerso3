@@ -12,6 +12,9 @@
 class PhysicsObject
 {
 public:
+	PhysicsObject() {
+
+	}
 	PhysicsObject(std::vector<FaceInfo> faceInfoList, std::vector<EdgeInfo> edgeInfoList, std::vector<glm::vec3> normals
 		, float mass, float cof, float cor
 		, glm::vec3 position
@@ -42,10 +45,10 @@ public:
 	glm::mat4 inertiaTensor;
 	glm::mat4 localFrame;
 	std::vector<glm::vec3> m_vertices;
+	std::vector<FaceInfo> m_faceInfoList;
 	BVH bvh;
 private:
 	AdaptiveTimeStepSolver solver;
-	std::vector<FaceInfo> m_faceInfoList;
 	std::vector<EdgeInfo> m_edgeInfoList;
 	std::vector<glm::vec3> m_normals;
 	float m_mass;
