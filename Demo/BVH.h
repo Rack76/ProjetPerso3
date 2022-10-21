@@ -3,13 +3,13 @@
 
 #include "Sphere.h"
 #include "Face.h"
+#include "AABB.h"
 #include <vector>
 
 class BVH
 {
 public:
 	BVH() {
-		faces.push_back(Face());
 		node0 = nullptr;
 		node1 = nullptr;
 	}
@@ -21,6 +21,7 @@ public:
 	}
 	std::vector<Face> faces;
 	Sphere sphere;
+	AABB aabb;
 	BVH* node0;
 	BVH* node1;
 };

@@ -36,9 +36,7 @@ public:
 	void deleteObject(int handle);
 	void run();
 private:
-	void computeBVH2(std::vector<glm::vec3> midpoints, BVH* bvh, std::vector<Face> faces);
-	void computeBVs(int handle, BVH** bvh, glm::vec3 medianPoint, float radius, std::vector<Face> faces);
-	void computeBVs2(int handle, BVH** bvh, glm::vec3 medianPoint, float radius, std::vector<glm::vec3> faces);
+	void computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::vector<Face>& faces);
 	void respondToCollisions();
 	void moveBVHs(int level);
 	void computeBVH(int handle);
