@@ -39,14 +39,17 @@ private:
 	void computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::vector<Face>& faces);
 	void respondToCollisions();
 	void moveBVHs(int level);
-	void computeBVH(int handle);
 	void computeContinuousBVHs(int level);
 	void detectCollisions();
+	bool collide(int handle0, int handle1);
+	bool bvhIntersect(int handle0, int handle1);
+	bool sphereIntersect(const BVH* bvh0, const BVH* bvh1);
 	void computeObjectExtendedRepresentation(int handle);
 	void computeNetForceTorquePair();
 	void applyGravity();
 	void moveObjects();
 	std::map<int, PhysicsObject> objects;
+	std::vector<std::pair<int, int>> listOfPotentialCollisions;
 	std::queue<int> handles;
 	Timer timer;
 };

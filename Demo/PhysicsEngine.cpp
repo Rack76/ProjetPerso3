@@ -43,7 +43,6 @@ void PhysicsEngine::computeObjectExtendedRepresentation(int handle)
 
 void PhysicsEngine::run()
 {
-	moveBVHs(0);
 	applyGravity();
 	moveObjects();
 	computeContinuousBVHs(0);
@@ -72,7 +71,11 @@ void PhysicsEngine::moveObjects()
 	{
 		object.second.move(dt);
 	}
+	computeWorldHierarchy();
+	buildListOfPotentialCollisions();
 }
+
+
 
 void PhysicsEngine::computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::vector<Face> &faces)
 {	
@@ -102,7 +105,7 @@ void PhysicsEngine::computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::
 			maximumZ = vertices[i].z;
 	}
 
-	float radius;
+	float radius = 0.0f;
 	glm::vec3 minimumPoint = glm::vec3(minimumX, minimumY, minimumZ);
 	glm::vec3 maximumPoint = glm::vec3(maximumX, maximumY, maximumZ);
 	if (glm::length(minimumPoint) < glm::length(maximumPoint))
@@ -110,11 +113,36 @@ void PhysicsEngine::computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::
 	else
 		radius = glm::length(minimumPoint);
 	glm::vec3 center = minimumPoint + 0.5f * (maximumPoint - minimumPoint);
-	bvh->sphere.m_center = center;
-	bvh->sphere.m_radius = radius;
 	bvh->aabb.bottomLeftCorner = minimumPoint;
 	bvh->aabb.topRightCorner = maximumPoint;
 	bvh->aabb.center = center;
+
+	std::vector<glm::vec3> facesVertices;
+	for (auto& face : faces)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			if(std::find(facesVertices.begin(), facesVertices.end(), face.v[i]) == facesVertices.end())
+				facesVertices.push_back(face.v[i]);
+		}
+	}
+
+	glm::vec3 midpoint = glm::vec3(0.0, 0.0, 0.0);
+	for (auto& vertex : facesVertices)
+	{
+		midpoint += vertex;
+	}
+	midpoint /= facesVertices.size();
+
+	radius = 0.0;
+	for (auto& vertex : facesVertices)
+	{
+		if (radius < glm::length(vertex - midpoint))
+			radius = glm::length(vertex - midpoint);
+	}
+
+	bvh->sphere.m_center = midpoint;
+	bvh->sphere.m_radius = radius;
 
 	glm::vec3 xAxis = glm::vec3(maximumX - minimumX, 0.0, 0.0);
 	glm::vec3 yAxis = glm::vec3(0.0, maximumY - minimumY, 0.0);
@@ -202,7 +230,35 @@ void PhysicsEngine::computeContinuousBVHs(int level)
 
 void PhysicsEngine::detectCollisions()
 {
+	for (auto& pair : listOfPotentialCollisions)
+	{
+		if (collide(pair.first, pair.second))
+		{
 
+		}
+	}
+}
+
+bool PhysicsEngine::collide(int handle0, int handle1)
+{
+	if()
+}
+
+bool PhysicsEngine::bvhIntersect(int handle0, int handle1)
+{
+	if (sphereIntersect(&objects[handle0].bvh, &objects[handle1].bvh))
+		return true;
+	return false;
+}
+
+bool PhysicsEngine::sphereIntersect(const BVH* bvh0, const BVH* bvh1)
+{
+	if(bvh0->node0 == nullptr)
+
+	sphereIntersect(bvh0->node0, bvh1->node0);
+	sphereIntersect(bvh0->node0, bvh1->node1);
+	sphereIntersect(bvh0->node1, bvh1->node0);
+	sphereIntersect(bvh0->node1, bvh1->node1);
 }
 
 void PhysicsEngine::respondToCollisions()
