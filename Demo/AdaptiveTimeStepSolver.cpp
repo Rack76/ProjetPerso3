@@ -40,9 +40,6 @@ void AdaptiveTimeStepSolver::run(float dt, glm::vec4& position, glm::vec4& linea
 			counter = 0;
 		}
 	}
-
-	position = newPosition;
-	orientation = newOrientation;
 	linearVelocity = newLinearVelocity;
 	angularVelocity = newAngularVelocity;
 }

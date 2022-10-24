@@ -44,10 +44,12 @@ void PhysicsEngine::computeObjectExtendedRepresentation(int handle)
 void PhysicsEngine::run()
 {
 	applyGravity();
-	moveObjects();
 	computeContinuousBVHs(0);
-	detectCollisions();
-	respondToCollisions();
+	while(detectCollisions())
+	{
+		respondToCollisions();
+	}
+	moveObjects();
 }
 
 void PhysicsEngine::computeNetForceTorquePair()
@@ -230,35 +232,32 @@ void PhysicsEngine::computeContinuousBVHs(int level)
 
 void PhysicsEngine::detectCollisions()
 {
-	for (auto& pair : listOfPotentialCollisions)
+	for (int i = 0 ; i < listOfPotentialCollisions.size(); i++)
 	{
-		if (collide(pair.first, pair.second))
-		{
-
-		}
+		bvhIntersect(listOfPotentialCollisions[i].first, listOfPotentialCollisions[i].second);
 	}
+	listOfPotentialCollisions.clear();
 }
 
-bool PhysicsEngine::collide(int handle0, int handle1)
+void PhysicsEngine::bvhIntersect(int handle0, int handle1)
 {
-	if()
+	sphereIntersect(&objects[handle0].bvh, &objects[handle1].bvh);
 }
 
-bool PhysicsEngine::bvhIntersect(int handle0, int handle1)
+void PhysicsEngine::sphereIntersect(const BVH* bvh0, const BVH* bvh1)
 {
-	if (sphereIntersect(&objects[handle0].bvh, &objects[handle1].bvh))
-		return true;
-	return false;
-}
-
-bool PhysicsEngine::sphereIntersect(const BVH* bvh0, const BVH* bvh1)
-{
-	if(bvh0->node0 == nullptr)
+	if (bvh0->node0 == nullptr)
+		trianglesIntersect(bvh0->faces, bvh1->faces);
 
 	sphereIntersect(bvh0->node0, bvh1->node0);
 	sphereIntersect(bvh0->node0, bvh1->node1);
 	sphereIntersect(bvh0->node1, bvh1->node0);
 	sphereIntersect(bvh0->node1, bvh1->node1);
+}
+
+void PhysicsEngine::trianglesIntersect(const std::vector<Face> &faces0, const std::vector<Face> &faces1)
+{
+
 }
 
 void PhysicsEngine::respondToCollisions()

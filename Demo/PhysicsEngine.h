@@ -41,9 +41,9 @@ private:
 	void moveBVHs(int level);
 	void computeContinuousBVHs(int level);
 	void detectCollisions();
-	bool collide(int handle0, int handle1);
-	bool bvhIntersect(int handle0, int handle1);
-	bool sphereIntersect(const BVH* bvh0, const BVH* bvh1);
+	void bvhIntersect(int handle0, int handle1);
+	void sphereIntersect(const BVH* bvh0, const BVH* bvh1);
+	void trianglesIntersect(const std::vector<Face>& faces0, const std::vector<Face>& faces1);
 	void computeObjectExtendedRepresentation(int handle);
 	void computeNetForceTorquePair();
 	void applyGravity();
