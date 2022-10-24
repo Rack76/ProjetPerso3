@@ -38,12 +38,13 @@ public:
 private:
 	void computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::vector<Face>& faces);
 	void respondToCollisions();
-	void moveBVHs(int level);
+	void moveBVHs(BVH* bvh0, BVH* bvh1,
+		int handle0, int handle1);
 	void computeContinuousBVHs(int level);
 	void detectCollisions();
 	void bvhIntersect(int handle0, int handle1);
 	void sphereIntersect(const BVH* bvh0, const BVH* bvh1);
-	void trianglesIntersect(const std::vector<Face>& faces0, const std::vector<Face>& faces1);
+	bool trianglesIntersect(const std::vector<Face>& faces0, const std::vector<Face>& faces1);
 	void computeObjectExtendedRepresentation(int handle);
 	void computeNetForceTorquePair();
 	void applyGravity();
