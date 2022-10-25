@@ -156,6 +156,7 @@
     <ClInclude Include="AdaptiveTimeStepSolver.h" />
     <ClInclude Include="BVH.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CollisionInfo.h" />
     <ClInclude Include="EdgeInfo.h" />
     <ClInclude Include="Face.h" />
     <ClInclude Include="FaceInfo.h" />

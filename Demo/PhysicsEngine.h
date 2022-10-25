@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "Plane.h"
 #include "Face.h"
+#include "CollisionInfo.h"
 #include <map>
 #include <queue>
 #include <vector>
@@ -43,7 +44,8 @@ private:
 	void computeContinuousBVHs(int level);
 	void detectCollisions();
 	void bvhIntersect(int handle0, int handle1);
-	void sphereIntersect(const BVH* bvh0, const BVH* bvh1);
+	bool sphereIntersect(BVH* bvh0, BVH* bvh1,
+		int handle0, int handle1, float* time);
 	bool trianglesIntersect(const std::vector<Face>& faces0, const std::vector<Face>& faces1);
 	void computeObjectExtendedRepresentation(int handle);
 	void computeNetForceTorquePair();
@@ -51,6 +53,8 @@ private:
 	void moveObjects();
 	std::map<int, PhysicsObject> objects;
 	std::vector<std::pair<int, int>> listOfPotentialCollisions;
+	std::map<float, CollisionInfo> globalCollisionList;
+	std::vector<CollisionInfo> collisionGroup;
 	std::queue<int> handles;
 	Timer timer;
 };

@@ -44,6 +44,7 @@ void PhysicsEngine::computeObjectExtendedRepresentation(int handle)
 void PhysicsEngine::run()
 {
 	applyGravity();
+	moveObjects();
 	while(detectCollisions())
 	{
 		respondToCollisions();
@@ -222,8 +223,10 @@ void PhysicsEngine::computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::
 void PhysicsEngine::moveBVHs(BVH* bvh0, BVH* bvh1,
 							 int handle0, int handle1)
 {
-	bvh0->sphere.m_center = objects[handle0].m_position;
-	bvh1->sphere.m_center = objects[handle1].m_position;
+	bvh0->sphere.m_center = glm::vec3(0.0, 0.0, 0.0);
+	bvh1->sphere.m_center = glm::vec3(0.0, 0.0, 0.0);
+	bvh0->sphere.m_center += objects[handle0].m_position;
+	bvh1->sphere.m_center += objects[handle1].m_position;
 }
 
 void PhysicsEngine::computeContinuousBVHs(int level)
@@ -238,31 +241,83 @@ void PhysicsEngine::detectCollisions()
 		bvhIntersect(listOfPotentialCollisions[i].first, listOfPotentialCollisions[i].second);
 	}
 	listOfPotentialCollisions.clear();
-	for(auto &)
+	for (auto& pair : globalCollisionList)
+	{
+		//fill collisionInfos
+
+		if (std::find(collisionGroup.begin(), collisionGroup.end(), pair.second) != collisionGroup.end())
+			continue;
+		if (collisionGroup.size() == 0)
+		{
+			collisionGroup.push_back(pair.second);
+			continue;
+		}
+		if (pair.second.time - collisionGroup[0].time < 0.01)
+		{
+			collisionGroup.push_back(pair.second);
+			continue;
+		}
+		else
+		{
+			respondToCollisions();
+			collisionGroup.push_back(pair.second);
+		}
+	}
 }
 
 void PhysicsEngine::bvhIntersect(int handle0, int handle1)
 {
 	float time;
-	if(sphereIntersect(&objects[handle0].bvh, &objects[handle1].bvh, &time)
+	if (sphereIntersect(&objects[handle0].bvh, &objects[handle1].bvh, handle0, handle1, &time));
+		globalCollisionList.emplace(time, CollisionInfo(handle0, handle1, time));
 }
 
 bool PhysicsEngine::sphereIntersect(BVH *bvh0, BVH *bvh1,
-									int handle0, int handle1)
+									int handle0, int handle1, float *time)
 {
 	moveBVHs(bvh0, bvh1,
 		     handle0, handle1);
-	if(glm::length(bvh0->sphere.m_center - bvh1->sphere.m_center) > bvh0->sphere.m_radius + bvh1->sphere.m_radius)
+	glm::vec4 v0 = objects[handle0].linearVelocity;
+	glm::vec4 a0 = glm::vec4(bvh0->sphere.m_center, 1.0f);
+
+	glm::vec4 v1 = objects[handle1].linearVelocity;
+	glm::vec4 a1 = glm::vec4(bvh1->sphere.m_center, 1.0f);
+	float a = glm::dot(v0-v1, v0-v1);
+	float b = 2.0f * glm::dot(a0 - a1, v0 - v1);
+	float c = glm::dot(a0 - a1, a0 - a1);
+	float delta = b * b - 4 * a * c;
+	if (delta > 0)
+	{
+		float x1 = (-b - sqrt(delta)) / (2 * a);
+		float x2 = (-b + sqrt(delta)) / (2 * a);
+		if ((x1 < 0 && x1 > 1) && (x2 < 0 && x2 > 1))
+			return false;
+	}
+	else if (delta == 0)
+	{
+		float x0 = -b / (2 * a);
+		if (x0 < 0 && x0 > 1)
+			return false;
+	}
+	else
 		return false;
 
 	if (bvh0->node0 == nullptr)
-		if (trianglesIntersect(bvh0->faces, bvh1->faces))
-			return true;
+		return trianglesIntersect(bvh0->faces, bvh1->faces);
 	 
-	sphereIntersect(bvh0->node0, bvh1->node0);
-	sphereIntersect(bvh0->node0, bvh1->node1);
-	sphereIntersect(bvh0->node1, bvh1->node0);
-	sphereIntersect(bvh0->node1, bvh1->node1);
+	sphereIntersect(bvh0->node0, bvh1->node0, handle0, handle1, time);
+	float time0 = *time;
+	sphereIntersect(bvh0->node0, bvh1->node1, handle0, handle1, time);
+	if (*time > time0)
+		*time = time0;
+	time0 = *time;
+	sphereIntersect(bvh0->node1, bvh1->node0, handle0, handle1, time);
+	if (*time > time0)
+		*time = time0;
+	time0 = *time;
+	sphereIntersect(bvh0->node1, bvh1->node1, handle0, handle1, time);
+	if (*time > time0)
+		*time = time0;
 }
 
 void PhysicsEngine::collisionTime(const std::vector<Face>& faces0, const std::vector<Face>& faces1,
