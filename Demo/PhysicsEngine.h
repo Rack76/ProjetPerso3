@@ -38,23 +38,26 @@ public:
 	void run();
 private:
 	void computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::vector<Face>& faces);
-	void respondToCollisions();
+	float respondToCollisions(float dt);
 	void moveBVHs(BVH* bvh0, BVH* bvh1,
 		int handle0, int handle1);
 	void computeContinuousBVHs(int level);
-	void detectCollisions();
-	void bvhIntersect(int handle0, int handle1);
+	void detectCollisions(float dt, float startingTime);
+	void bvhIntersect(int handle0, int handle1, float startingTime);
 	bool sphereIntersect(BVH* bvh0, BVH* bvh1,
-		int handle0, int handle1, float* time);
-	bool trianglesIntersect(const std::vector<Face>& faces0, const std::vector<Face>& faces1);
+		int handle0, int handle1, float* time, float startingTime);
+	bool trianglesIntersect(const std::vector<Face>& faces0, const std::vector<Face>& faces1, float *time, float startingTime);
 	void computeObjectExtendedRepresentation(int handle);
 	void computeNetForceTorquePair();
 	void applyGravity();
-	void moveObjects();
+	void moveObjects(float dt);
 	std::map<int, PhysicsObject> objects;
 	std::vector<std::pair<int, int>> listOfPotentialCollisions;
 	std::map<float, CollisionInfo> globalCollisionList;
 	std::vector<CollisionInfo> collisionGroup;
+	std::vector<CollisionInfo> contactList;
+	std::vector<int> collidingObjects;
+	std::vector<int> objectsInContact;
 	std::queue<int> handles;
 	Timer timer;
 };

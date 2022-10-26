@@ -2,7 +2,8 @@
 
 void AdaptiveTimeStepSolver::run(float dt, glm::vec4& position, glm::vec4& linearVelocity
 	, glm::mat4& orientation, glm::mat4& angularVelocity
-	, glm::vec4 netForce, glm::mat4 netTorque)
+	, glm::vec4 netForce, glm::mat4 netTorque
+	, glm::vec4 &m_newPosition, glm::mat4 &m_newOrientation)
 {
 	m_position = position;
 	m_linearVelocity = linearVelocity;
@@ -42,6 +43,8 @@ void AdaptiveTimeStepSolver::run(float dt, glm::vec4& position, glm::vec4& linea
 	}
 	linearVelocity = newLinearVelocity;
 	angularVelocity = newAngularVelocity;
+	m_newPosition = newPosition;
+	m_newOrientation = newOrientation;
 }
 
 void AdaptiveTimeStepSolver::resetDynamicState()

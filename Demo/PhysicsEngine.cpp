@@ -43,13 +43,18 @@ void PhysicsEngine::computeObjectExtendedRepresentation(int handle)
 
 void PhysicsEngine::run()
 {
+	float startingTime = 0;
 	applyGravity();
-	moveObjects();
-	while(detectCollisions())
+	float dt = timer.getTime();
+	timer.set();
+	moveObjects(dt);
+	while(listOfPotentialCollisions.size() != 0)
 	{
-		respondToCollisions();
+		detectCollisions(dt, startingTime);
+		startingTime = respondToCollisions(dt);
+		if (startingTime > 1)
+			break;
 	}
-	moveObjects();
 }
 
 void PhysicsEngine::computeNetForceTorquePair()
@@ -65,10 +70,8 @@ void PhysicsEngine::applyGravity()
 	}
 }
 
-void PhysicsEngine::moveObjects()
+void PhysicsEngine::moveObjects(float dt)
 {
-	float dt = timer.getTime();
-	timer.set();
 	for (auto &object : objects)
 	{
 		object.second.move(dt);
@@ -234,17 +237,23 @@ void PhysicsEngine::computeContinuousBVHs(int level)
 
 }
 
-void PhysicsEngine::detectCollisions()
+void PhysicsEngine::detectCollisions(float dt, float startingTime)
 {
 	for (int i = 0 ; i < listOfPotentialCollisions.size(); i++)
 	{
-		bvhIntersect(listOfPotentialCollisions[i].first, listOfPotentialCollisions[i].second);
+		bvhIntersect(listOfPotentialCollisions[i].first, listOfPotentialCollisions[i].second, startingTime);
 	}
 	listOfPotentialCollisions.clear();
 	for (auto& pair : globalCollisionList)
 	{
 		//fill collisionInfos
-
+		glm::vec4 position0 = objects[pair.second.object0].m_position + objects[pair.second.object0].linearVelocity * pair.first;
+		glm::vec4 position1 = objects[pair.second.object1].m_position + objects[pair.second.object1].linearVelocity * pair.first;
+		// same for orientations
+		//figure out remainding collisionInfos members
+	}
+	for (auto& pair : globalCollisionList)
+	{
 		if (std::find(collisionGroup.begin(), collisionGroup.end(), pair.second) != collisionGroup.end())
 			continue;
 		if (collisionGroup.size() == 0)
@@ -259,22 +268,25 @@ void PhysicsEngine::detectCollisions()
 		}
 		else
 		{
-			respondToCollisions();
+			respondToCollisions(dt);
 			collisionGroup.push_back(pair.second);
 		}
 	}
+	globalCollisionList.clear();
 }
 
-void PhysicsEngine::bvhIntersect(int handle0, int handle1)
+void PhysicsEngine::bvhIntersect(int handle0, int handle1, float startingTime)
 {
 	float time;
-	if (sphereIntersect(&objects[handle0].bvh, &objects[handle1].bvh, handle0, handle1, &time));
+	if (sphereIntersect(&objects[handle0].bvh, &objects[handle1].bvh, handle0, handle1, &time, startingTime));
 		globalCollisionList.emplace(time, CollisionInfo(handle0, handle1, time));
 }
 
 bool PhysicsEngine::sphereIntersect(BVH *bvh0, BVH *bvh1,
-									int handle0, int handle1, float *time)
+									int handle0, int handle1, float *time, float startingTime)
 {
+	bool condition0, condition1, condition2, condition3;
+
 	moveBVHs(bvh0, bvh1,
 		     handle0, handle1);
 	glm::vec4 v0 = objects[handle0].linearVelocity;
@@ -284,7 +296,7 @@ bool PhysicsEngine::sphereIntersect(BVH *bvh0, BVH *bvh1,
 	glm::vec4 a1 = glm::vec4(bvh1->sphere.m_center, 1.0f);
 	float a = glm::dot(v0-v1, v0-v1);
 	float b = 2.0f * glm::dot(a0 - a1, v0 - v1);
-	float c = glm::dot(a0 - a1, a0 - a1);
+	float c  = glm::dot(a0 - a1, a0 - a1);
 	float delta = b * b - 4 * a * c;
 	if (delta > 0)
 	{
@@ -303,35 +315,92 @@ bool PhysicsEngine::sphereIntersect(BVH *bvh0, BVH *bvh1,
 		return false;
 
 	if (bvh0->node0 == nullptr)
-		return trianglesIntersect(bvh0->faces, bvh1->faces);
+		return trianglesIntersect(bvh0->faces, bvh1->faces, time, startingTime);
 	 
-	sphereIntersect(bvh0->node0, bvh1->node0, handle0, handle1, time);
+	condition0 = sphereIntersect(bvh0->node0, bvh1->node0, handle0, handle1, time, startingTime);
 	float time0 = *time;
-	sphereIntersect(bvh0->node0, bvh1->node1, handle0, handle1, time);
+	condition1 = sphereIntersect(bvh0->node0, bvh1->node1, handle0, handle1, time, startingTime);
 	if (*time > time0)
 		*time = time0;
 	time0 = *time;
-	sphereIntersect(bvh0->node1, bvh1->node0, handle0, handle1, time);
+	condition2 = sphereIntersect(bvh0->node1, bvh1->node0, handle0, handle1, time, startingTime);
 	if (*time > time0)
 		*time = time0;
 	time0 = *time;
-	sphereIntersect(bvh0->node1, bvh1->node1, handle0, handle1, time);
+	condition3 = sphereIntersect(bvh0->node1, bvh1->node1, handle0, handle1, time, startingTime);
 	if (*time > time0)
 		*time = time0;
+	return (condition0 || condition1 || condition2 || condition3);
 }
 
-void PhysicsEngine::collisionTime(const std::vector<Face>& faces0, const std::vector<Face>& faces1,
-								  const glm::vec4 )
+bool PhysicsEngine::trianglesIntersect(const std::vector<Face> &faces0, const std::vector<Face> &faces1, float *time, float startingTime)
 {
 
 }
 
-bool PhysicsEngine::trianglesIntersect(const std::vector<Face> &faces0, const std::vector<Face> &faces1)
+float PhysicsEngine::respondToCollisions(float dt)
 {
-
-}
-
-void PhysicsEngine::respondToCollisions()
-{
-
+	//set final positions and orientations
+	float time = collisionGroup[0].time;
+	if (time > 1)
+		return time;
+	for (auto& collision : collisionGroup)
+	{
+		if (std::find(collidingObjects.begin(), collidingObjects.end(), collision.object0) == collidingObjects.end())
+		{
+			collidingObjects.push_back(collision.object0);
+		}
+		if (std::find(collidingObjects.begin(), collidingObjects.end(), collision.object1) == collidingObjects.end())
+		{
+			collidingObjects.push_back(collision.object1);
+		}
+	}
+	for (auto& object : collidingObjects)
+	{
+		objects[object].m_position += objects[object].linearVelocity * time;
+		//same for orientations
+	}
+	for (auto& collision : collisionGroup)
+	{
+		//check if the collision is a contact, if so, remove it from collision group add it to the list of contacts
+		//compute collision impulses, convert each to a force-torque pair and add them to the objects
+	}	
+	for (auto& object : collidingObjects)
+	{
+		objects[object].move(dt - time);
+	}
+	collidingObjects.clear();
+	for (auto& contact : contactList)
+	{
+		if (std::find(collisionGroup.begin(), collisionGroup.end(), contact) != collisionGroup.end())
+		{
+			/*check if the contact is still valid, if not, move it from list of contacts to collision group,
+			or if contact breaks apart, just removes it*/
+		}
+	}
+	for (auto& object : collidingObjects)
+	{
+		objects[object].move(dt - time);
+	}
+	collidingObjects.clear();
+	for (auto& contact : contactList)
+	{
+		if (std::find(objectsInContact.begin(), objectsInContact.end(), contact.object0) == objectsInContact.end())
+		{
+			objectsInContact.push_back(contact.object0);
+		}
+		if (std::find(objectsInContact.begin(), objectsInContact.end(), contact.object1) == objectsInContact.end())
+		{
+			objectsInContact.push_back(contact.object1);
+		}
+	}
+	//compute contact forces, convert each to a force-torque pair and add them to the objects
+	for (auto& object : objectsInContact)
+	{
+		objects[object].move(dt - time);
+	}
+	collisionGroup.clear();
+	contactList.clear();
+	objectsInContact.clear();
+	return time;
 }

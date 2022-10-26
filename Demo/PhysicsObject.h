@@ -34,12 +34,14 @@ public:
 	void move(float dt);
 
 	glm::vec4 m_position;
+	glm::vec4 m_newPosition;
 	glm::vec4 linearVelocity;
 	glm::vec4 linearAcceleration;
 	glm::vec4 centerOfMass;
 	glm::vec4 netForce;
 	glm::mat4 netTorque;
 	glm::mat4 m_orientation;
+	glm::mat4 m_newOrientation;
 	glm::mat4 angularVelocity;
 	glm::mat4 angularAcceleration;
 	glm::mat4 inertiaTensor;
