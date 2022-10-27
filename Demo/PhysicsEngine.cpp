@@ -16,6 +16,7 @@ int PhysicsEngine::registerObject(std::vector<FaceInfo> faceInfoList, std::vecto
 
 void PhysicsEngine::mapObject(int handle, glm::vec3& position, glm::mat4& orientation)
 {
+
 	position = objects[handle].m_position;
 	orientation = objects[handle].m_orientation;
 }
@@ -51,7 +52,7 @@ void PhysicsEngine::run()
 	while(listOfPotentialCollisions.size() != 0)
 	{
 		detectCollisions(dt, startingTime);
-		startingTime = respondToCollisions(dt);
+		startingTime = respondToCollisions(dt, startingTime);
 		if (startingTime > 1)
 			break;
 	}
@@ -268,7 +269,7 @@ void PhysicsEngine::detectCollisions(float dt, float startingTime)
 		}
 		else
 		{
-			respondToCollisions(dt);
+			respondToCollisions(dt, startingTime);
 			collisionGroup.push_back(pair.second);
 		}
 	}
@@ -302,13 +303,13 @@ bool PhysicsEngine::sphereIntersect(BVH *bvh0, BVH *bvh1,
 	{
 		float x1 = (-b - sqrt(delta)) / (2 * a);
 		float x2 = (-b + sqrt(delta)) / (2 * a);
-		if ((x1 < 0 && x1 > 1) && (x2 < 0 && x2 > 1))
+		if ((x1 < 0 && x1 > 1 - startingTime) && (x2 < 0 && x2 > 1 - startingTime))
 			return false;
 	}
 	else if (delta == 0)
 	{
 		float x0 = -b / (2 * a);
-		if (x0 < 0 && x0 > 1)
+		if (x0 < 0 && x0 > 1 - startingTime)
 			return false;
 	}
 	else
@@ -338,7 +339,7 @@ bool PhysicsEngine::trianglesIntersect(const std::vector<Face> &faces0, const st
 
 }
 
-float PhysicsEngine::respondToCollisions(float dt)
+float PhysicsEngine::respondToCollisions(float dt, float startingTime)
 {
 	//set final positions and orientations
 	float time = collisionGroup[0].time;
@@ -357,7 +358,7 @@ float PhysicsEngine::respondToCollisions(float dt)
 	}
 	for (auto& object : collidingObjects)
 	{
-		objects[object].m_position += objects[object].linearVelocity * time;
+		objects[object].m_position += objects[object].linearVelocity * (time);
 		//same for orientations
 	}
 	for (auto& collision : collisionGroup)

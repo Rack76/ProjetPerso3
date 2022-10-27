@@ -38,7 +38,7 @@ public:
 	void run();
 private:
 	void computeBVH2(std::vector<glm::vec3> vertices, BVH* bvh, std::vector<Face>& faces);
-	float respondToCollisions(float dt);
+	float respondToCollisions(float dt, float startingTime);
 	void moveBVHs(BVH* bvh0, BVH* bvh1,
 		int handle0, int handle1);
 	void computeContinuousBVHs(int level);
