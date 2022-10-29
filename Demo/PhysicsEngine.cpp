@@ -44,17 +44,16 @@ void PhysicsEngine::computeObjectExtendedRepresentation(int handle)
 
 void PhysicsEngine::run()
 {
+	shouldStopRunning = false;
 	float startingTime = 0;
 	applyGravity();
 	float dt = timer.getTime();
 	timer.set();
 	moveObjects(dt);
-	while(listOfPotentialCollisions.size() != 0)
+	while(!shouldStopRunning)
 	{
 		detectCollisions(dt, startingTime);
-		startingTime = respondToCollisions(dt, startingTime);
-		if (startingTime > 1)
-			break;
+		respondToCollisions(dt, startingTime);
 	}
 }
 
@@ -245,6 +244,13 @@ void PhysicsEngine::detectCollisions(float dt, float startingTime)
 		bvhIntersect(listOfPotentialCollisions[i].first, listOfPotentialCollisions[i].second, startingTime);
 	}
 	listOfPotentialCollisions.clear();
+	if (globalCollisionList.size() == 0)
+		shouldStopRunning = true;
+	else 
+	{
+		if(globalCollisionList[0].time > 1)
+			shouldStopRunning = true;
+	}
 	for (auto& pair : globalCollisionList)
 	{
 		//fill collisionInfos
@@ -303,13 +309,13 @@ bool PhysicsEngine::sphereIntersect(BVH *bvh0, BVH *bvh1,
 	{
 		float x1 = (-b - sqrt(delta)) / (2 * a);
 		float x2 = (-b + sqrt(delta)) / (2 * a);
-		if ((x1 < 0 && x1 > 1 - startingTime) && (x2 < 0 && x2 > 1 - startingTime))
+		if ((x1 < 0 && x1 > 1) && (x2 < 0 && x2 > 1))
 			return false;
 	}
 	else if (delta == 0)
 	{
 		float x0 = -b / (2 * a);
-		if (x0 < 0 && x0 > 1 - startingTime)
+		if (x0 < 0 && x0 > 1)
 			return false;
 	}
 	else
@@ -339,12 +345,10 @@ bool PhysicsEngine::trianglesIntersect(const std::vector<Face> &faces0, const st
 
 }
 
-float PhysicsEngine::respondToCollisions(float dt, float startingTime)
+void PhysicsEngine::respondToCollisions(float dt, float startingTime)
 {
 	//set final positions and orientations
 	float time = collisionGroup[0].time;
-	if (time > 1)
-		return time;
 	for (auto& collision : collisionGroup)
 	{
 		if (std::find(collidingObjects.begin(), collidingObjects.end(), collision.object0) == collidingObjects.end())
@@ -403,5 +407,4 @@ float PhysicsEngine::respondToCollisions(float dt, float startingTime)
 	collisionGroup.clear();
 	contactList.clear();
 	objectsInContact.clear();
-	return time;
 }
