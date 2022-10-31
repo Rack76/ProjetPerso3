@@ -372,7 +372,7 @@ void PhysicsEngine::respondToCollisions(float dt, float startingTime)
 	}	
 	for (auto& object : collidingObjects)
 	{
-		objects[object].move(dt - time);
+		objects[object].move(dt - dt * time);
 	}
 	collidingObjects.clear();
 	for (auto& contact : contactList)
@@ -385,7 +385,7 @@ void PhysicsEngine::respondToCollisions(float dt, float startingTime)
 	}
 	for (auto& object : collidingObjects)
 	{
-		objects[object].move(dt - time);
+		objects[object].move(dt - dt * time);
 	}
 	collidingObjects.clear();
 	for (auto& contact : contactList)
@@ -402,7 +402,7 @@ void PhysicsEngine::respondToCollisions(float dt, float startingTime)
 	//compute contact forces, convert each to a force-torque pair and add them to the objects
 	for (auto& object : objectsInContact)
 	{
-		objects[object].move(dt - time);
+		objects[object].move(dt - dt * time);
 	}
 	collisionGroup.clear();
 	contactList.clear();
