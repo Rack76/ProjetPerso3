@@ -321,7 +321,21 @@ bool PhysicsEngine::sphereIntersect(BVH *bvh0, BVH *bvh1,
 	else
 		return false;
 
-	if (bvh0->node0 == nullptr)
+	if (bvh0->node0 == nullptr && bvh1->node0 != nullptr)
+	{
+		condition0 = sphereIntersect(bvh0, bvh1->node0, handle0, handle1, time, startingTime);
+		condition1 = sphereIntersect(bvh0, bvh1->node1, handle0, handle1, time, startingTime);
+		return (condition0 || condition1);
+	}
+
+	if (bvh0->node0 != nullptr && bvh1->node0 == nullptr)
+	{
+		condition0 = sphereIntersect(bvh0->node0, bvh1, handle0, handle1, time, startingTime);
+		condition1 = sphereIntersect(bvh0->node1, bvh1, handle0, handle1, time, startingTime);
+		return (condition0 || condition1);
+	}
+
+	if (bvh0->node0 == nullptr && bvh1->node0 == nullptr)
 		return trianglesIntersect(bvh0->faces, bvh1->faces, time, startingTime);
 	 
 	condition0 = sphereIntersect(bvh0->node0, bvh1->node0, handle0, handle1, time, startingTime);
